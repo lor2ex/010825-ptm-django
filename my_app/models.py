@@ -36,15 +36,31 @@ class Task(models.Model):
     status: str = models.CharField(
         verbose_name="Статус задачи",
         max_length=20,
-        choices=STATUS_CHOICES
+        choices=STATUS_CHOICES,
+        default ="NEW"
     )
-    deadline:datetime = models.DateTimeField(
+    deadline: datetime = models.DateTimeField(
         verbose_name="Дата и время дедлайн"
     )
     created_at: datetime = models.DateTimeField(
         verbose_name="Дата и время создания",
         auto_now_add=True
     )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = "task_manager_task"
+        ordering = ["-created_at"]
+        verbose_name = "Task"
+        verbose_name_plural = "Tasks"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title'],
+                name='unique_task_title'
+            )
+        ]
 
 
 
@@ -69,7 +85,8 @@ class SubTask(models.Model):
     status: str = models.CharField(
         verbose_name="Статус задачи",
         max_length=20,
-        choices=STATUS_CHOICES
+        choices=STATUS_CHOICES,
+        default ="NEW"
     )
     deadline: datetime = models.DateTimeField(
         verbose_name="Дата и время дедлайн"
@@ -78,6 +95,21 @@ class SubTask(models.Model):
         verbose_name="Дата и время создания",
         auto_now_add=True
     )
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = "task_manager_subtask"
+        ordering = ["-created_at"]
+        verbose_name = "SubTask"
+        verbose_name_plural = "SubTasks"
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title'],
+                name='unique_subtask_title'
+            )
+        ]
 
 
 
@@ -88,3 +120,10 @@ class Category(models.Model):
         verbose_name="Название категории"
     )
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "task_manager_category"
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
