@@ -2,10 +2,25 @@ from django.contrib import admin
 
 from my_app.models import Task, SubTask, Category
 
+
+
+
+class SubTaskInline(admin.StackedInline):
+    model = SubTask
+    extra = 1
+
+
+
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
+
+    def short_title(self, obj):
+        return (obj.title[:10] + "...") if len(obj.title) > 10 else obj.title
+
+    short_title.short_description = "Название"
+
     list_display = [
-        "title",
+        "short_title",
         "status",
         "created_at",
         "deadline"
@@ -25,6 +40,8 @@ class TaskAdmin(admin.ModelAdmin):
     ]
 
     list_per_page = 10
+
+    inlines = [SubTaskInline]
 
 
 
@@ -51,6 +68,12 @@ class SubTaskAdmin(admin.ModelAdmin):
     ]
 
     list_per_page = 10
+
+    @admin.action(description="✅ Завершить выбранные подзадачи")
+    def mark_done(self, request, queryset):
+        queryset.update(status='Done')
+
+    actions = ['mark_done']
 
 
 
