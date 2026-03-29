@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework import status
 from django.db.models import QuerySet, Count
+from rest_framework.views import APIView
 
 from my_app.models import Task
 from my_app.serializers.task import TasksSerializer, TasksCreateSerializer, TasksUpdateSerializer
