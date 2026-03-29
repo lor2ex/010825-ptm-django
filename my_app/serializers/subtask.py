@@ -8,10 +8,13 @@ class SubTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubTask
         fields = [
+            "id",
+            "title",
             'title',
             'description',
             'deadline',
             'created_at',
+            'status',
         ]
 
 
