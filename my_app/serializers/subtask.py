@@ -21,3 +21,8 @@ class SubTaskCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubTask
         fields = "__all__"
+        # extra_kwargs = {
+        #     "created_at": {
+        #         "read_only": True
+        #     }
+        # }
