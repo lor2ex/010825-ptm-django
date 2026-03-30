@@ -40,7 +40,7 @@ class TasksUpdateSerializer(serializers.ModelSerializer):
 
 
 class TaskDetailSerializer(serializers.ModelSerializer):
-    SubTask = SubTaskSerializer(many=True, read_only=True)
+    subtasks = SubTaskSerializer(many=True, read_only=True)
 
     class Meta:
         model = Task
