@@ -5,7 +5,9 @@ from my_app.models import Task
 from .subtask import SubTaskSerializer
 
 
+
 class TasksSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Task
         fields = [
@@ -17,7 +19,19 @@ class TasksSerializer(serializers.ModelSerializer):
         ]
 
 
+def validate_deadline(value: datetime):
+    if value < datetime.now():
+        raise serializers.ValidationError(f"Дедлайн не может быть в прошлом")
+    return value
+
+
 class TasksCreateSerializer(serializers.ModelSerializer):
+    deadline = serializers.DateTimeField(
+        allow_null=True,
+        required=False,
+        style={"input_type": "text"},
+    )
+
     class Meta:
         model = Task
         fields = [
@@ -27,13 +41,14 @@ class TasksCreateSerializer(serializers.ModelSerializer):
             "deadline",
         ]
 
-    def validate_deadline(self, value: datetime):
-        if value < datetime.now():
-            raise serializers.ValidationError(f"Дедлайн не может быть в прошлом")
-        return value
-
 
 class TasksUpdateSerializer(serializers.ModelSerializer):
+    deadline = serializers.DateTimeField(
+        allow_null=True,
+        required=False,
+        style={"input_type": "text"},
+    )
+
     class Meta:
         model = Task
         fields = "__all__"

@@ -37,7 +37,7 @@ class Task(models.Model):
         verbose_name="Статус задачи",
         max_length=20,
         choices=STATUS_CHOICES,
-        default ="NEW"
+        default ="New"
     )
     deadline: datetime = models.DateTimeField(
         verbose_name="Дата и время дедлайн"
@@ -86,7 +86,7 @@ class SubTask(models.Model):
         verbose_name="Статус задачи",
         max_length=20,
         choices=STATUS_CHOICES,
-        default ="NEW"
+        default ="New"
     )
     deadline: datetime = models.DateTimeField(
         verbose_name="Дата и время дедлайн"
