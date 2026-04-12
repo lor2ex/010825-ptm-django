@@ -6,6 +6,12 @@ from my_app.models import Category
 error_txt = "Категория уже существует"
 
 class CategorySerializer(serializers.ModelSerializer):
+    deleted_at = serializers.DateTimeField(
+        allow_null=True,
+        required=False,
+        style={"input_type": "text"},
+    )
+
     def validate_name(self, value):
         if self.instance:  # update
             if Category.objects.filter(name=value).exclude(id=self.instance.id).exists():

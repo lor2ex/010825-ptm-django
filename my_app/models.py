@@ -2,8 +2,7 @@ from datetime import datetime
 
 from django.db import models
 from django.core.validators import MinLengthValidator, MaxLengthValidator
-
-
+from django.utils import timezone
 
 STATUS_CHOICES = [
         ('New', 'NEW STATUS'),
@@ -119,6 +118,8 @@ class Category(models.Model):
         unique=True,
         verbose_name="Название категории"
     )
+    is_deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -127,3 +128,8 @@ class Category(models.Model):
         db_table = "task_manager_category"
         verbose_name = "Category"
         verbose_name_plural = "Categories"
+
+    def delete(self, using = None, keep_parents = False):
+        self.is_deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
