@@ -122,6 +122,80 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+LOGS_DIR = BASE_DIR / 'logs'  # Директория, где будут храниться лог-файлы.
+LOGS_DIR.mkdir(exist_ok=True)  # Создаём папку logs, если её ещё нет, чтобы FileHandler не упал.
+
+
+REST_FRAMEWORK = {
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    # 'PAGE_SIZE': 10,
+
+    'DEFAULT_PAGINATION_CLASS': 'paginators.MyCustomCursorPagination',
+}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'simple': {
+            'format': '[{levelname}] | {asctime} -- {name}: ({message})',
+            'style': '{',
+        },
+        'verbose': {
+            'format': '[{levelname}] {asctime} {name} | module={module} | func={funcName} | line={lineno:d} | {message}',
+            'style': '{',
+        },
+        'sql': {
+            'format': '[{levelname}] {asctime} {name} | {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'level': 'INFO',
+        },
+        'http_file': {
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'http_logs.log',
+            'formatter': 'verbose',
+            'level': 'INFO',
+            'encoding': 'utf-8',
+        },
+        'db_file': {
+            'class': 'logging.FileHandler',
+            'filename': LOGS_DIR / 'db_logs.log',
+            'formatter': 'sql',
+            'level': 'DEBUG',
+            'encoding': 'utf-8',
+        },
+    },
+
+    'loggers': {
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['http_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['db_file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
